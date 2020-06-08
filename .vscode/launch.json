@@ -8,7 +8,7 @@
       "name": "(gdb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/tetris",
+      "program": "${workspaceFolder}/build/traffic_simulation",
       "args": [],
       "stopAtEntry": true,
       "cwd": "${workspaceFolder}/build/",

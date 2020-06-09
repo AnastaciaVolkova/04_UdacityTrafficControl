@@ -29,7 +29,7 @@ public:
 private:
   std::deque<TrafficLightPhase> _queue;
   std::mutex _mutex;
-  std::condition_variable _contdition;
+  std::condition_variable _contion;
 };
 
 // FP.1 : Define a class „TrafficLight“ which is a child class of TrafficObject.
@@ -59,7 +59,7 @@ private:
   // TrafficLightPhase and use it within the infinite loop to push each new
   // TrafficLightPhase into it by calling send in conjunction with move
   // semantics.
-
+  MessageQueue<TrafficLightPhase> _message;
   std::condition_variable _condition;
   std::mutex _mutex;
 };

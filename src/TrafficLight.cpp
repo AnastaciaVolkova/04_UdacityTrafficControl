@@ -2,8 +2,10 @@
 #include <iostream>
 #include <random>
 
+using std::lock_guard;
 using std::move;
 using std::mt19937;
+using std::mutex;
 using std::random_device;
 using std::thread;
 using std::uniform_int_distribution;
@@ -21,6 +23,9 @@ template <typename T> void MessageQueue<T>::send(T &&msg) {
   // FP.4a : The method send should use the mechanisms
   // std::lock_guard<std::mutex> as well as _condition.notify_one() to add a new
   // message to the queue and afterwards send a notification.
+  lock_guard<mutex> ulock(_mutex);
+  _queue.push_back(move(msg));
+  _condition.notify_one();
 }
 
 /* Implementation of class "TrafficLight" */

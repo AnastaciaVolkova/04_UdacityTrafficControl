@@ -71,19 +71,24 @@ void TrafficLight::cycleThroughPhases() {
   random_device rd;
   mt19937 gen(rd());
   uniform_int_distribution<> dis(4000, 6000);
+  auto start = std::chrono::system_clock::now();
+  int frame_dur = dis(gen);
   while (true) {
-    auto start = std::chrono::system_clock::now();
-    int frame_dur = dis(gen);
-    while (std::chrono::duration_cast<std::chrono::milliseconds>(
-               std::chrono::system_clock::now() - start)
-               .count() < frame_dur)
-      ;
-    if (_currentPhase == TrafficLightPhase::red)
-      _currentPhase = TrafficLightPhase::green;
-    else
-      _currentPhase = TrafficLightPhase::red;
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    _message.send(move(_currentPhase));
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - start)
+            .count() >= frame_dur) {
+
+      if (_currentPhase == TrafficLightPhase::red)
+        _currentPhase = TrafficLightPhase::green;
+      else
+        _currentPhase = TrafficLightPhase::red;
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      _message.send(move(_currentPhase));
+      // Update time of cycle start.
+      start = std::chrono::system_clock::now();
+      // Get new random cycle duration.
+      frame_dur = dis(gen);
+    }
   }
 }
 

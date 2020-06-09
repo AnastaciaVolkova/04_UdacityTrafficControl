@@ -22,7 +22,7 @@ template <typename T> T MessageQueue<T>::receive() {
   _condition.wait(uLock, [this] { return !_queue.empty(); });
   // Retrive queue element.
   T q_el = move(_queue.back());
-  _queue.pop_back();
+  _queue.clear();
   return q_el;
 }
 

@@ -9,6 +9,7 @@ using std::mutex;
 using std::random_device;
 using std::thread;
 using std::uniform_int_distribution;
+using std::unique_lock;
 
 /* Implementation of class "MessageQueue" */
 
@@ -17,6 +18,12 @@ template <typename T> T MessageQueue<T>::receive() {
   // _condition.wait() to wait for and receive new messages and pull them from
   // the queue using move semantics.
   // The received object should then be returned by the receive function.
+  unique_lock<mutex> uLock(_mutex);
+  _condition.wait(uLock, [this] { return !_queue.empty(); });
+  // Retrive queue element.
+  T q_el = move(_queue.front());
+  _queue.pop_front();
+  return q_el;
 }
 
 template <typename T> void MessageQueue<T>::send(T &&msg) {
@@ -38,6 +45,8 @@ void TrafficLight::waitForGreen() {
   // infinite while - loop
   // runs and repeatedly calls the receive function on the message queue.
   // Once it receives TrafficLightPhase::green, the method returns.
+  while (_message.receive() != TrafficLightPhase::green) {
+  };
 }
 
 TrafficLightPhase TrafficLight::getCurrentPhase() { return _currentPhase; }

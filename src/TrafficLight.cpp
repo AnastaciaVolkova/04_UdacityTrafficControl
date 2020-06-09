@@ -21,8 +21,8 @@ template <typename T> T MessageQueue<T>::receive() {
   unique_lock<mutex> uLock(_mutex);
   _condition.wait(uLock, [this] { return !_queue.empty(); });
   // Retrive queue element.
-  T q_el = move(_queue.front());
-  _queue.pop_front();
+  T q_el = move(_queue.back());
+  _queue.pop_back();
   return q_el;
 }
 

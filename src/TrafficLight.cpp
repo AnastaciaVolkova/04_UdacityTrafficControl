@@ -82,7 +82,7 @@ void TrafficLight::cycleThroughPhases() {
       _currentPhase = TrafficLightPhase::green;
     else
       _currentPhase = TrafficLightPhase::red;
-    std::this_thread::sleep_for(std::chrono::microseconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     _message.send(move(_currentPhase));
   }
 }
